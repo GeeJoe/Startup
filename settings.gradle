@@ -1,0 +1,13 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = "Startup"
+include ':app'
+include ':startup'
+include ':startup-annotation'
+include ':startup-processor'
