@@ -19,7 +19,7 @@ class MyApplication : Application() {
     override fun attachBaseContext(base: Context) {
         appContext = base
         super.attachBaseContext(base)
-        Startup.build(this, InitializerRegistry, startupLogger).init()
+        Startup.build(base, InitializerRegistry, startupLogger).init()
     }
 
     inner class StartupLogger : IStartupLogger {

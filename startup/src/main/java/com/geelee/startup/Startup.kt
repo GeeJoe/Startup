@@ -26,12 +26,11 @@ import kotlinx.coroutines.withContext
  * Step 2: 实现类加上注解 [com.geelee.startup.annotation.AppInitializer]
  */
 class Startup private constructor(
-    context: Context,
+    private val appContext: Context,
     private val registry: IInitializerRegistry,
     private val logger: IStartupLogger
 ) {
 
-    private val appContext: Context = context.applicationContext
     private val currentProcess = appContext.processName()
 
     fun init() {
@@ -112,7 +111,7 @@ class Startup private constructor(
             registry: IInitializerRegistry,
             logger: IStartupLogger
         ): Startup {
-            val appContext = context.applicationContext
+            val appContext = context.applicationContext ?: context
             return Startup(appContext, registry, logger)
         }
     }

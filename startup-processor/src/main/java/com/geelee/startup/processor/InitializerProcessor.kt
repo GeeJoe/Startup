@@ -218,7 +218,7 @@ class InitializerProcessor : AbstractProcessor() {
         InitializerReporter(
             mainThreadComponentChainList,
             workThreadComponentChainList
-        ).outputReport()
+        ).outputReport(processingEnv)
         return true
     }
 

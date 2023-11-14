@@ -1,15 +1,17 @@
 package com.geelee.startup.demo
 
 import android.content.Context
+import android.util.Log
 import com.geelee.startup.Initializer
-import com.geelee.startup.annotation.AppInitializer
 
 /**
  * Created by zhiyueli on 11/13/23 17:52.
  */
-@AppInitializer
-class DemoInitializer : Initializer {
+open class BaseLogInitializer : Initializer {
     override fun create(context: Context, processName: String) {
-        TODO("Not yet implemented")
+        Log.i(
+            "Startup",
+            "${this::class.simpleName} curThread=${Thread.currentThread()} curProcess=${processName}"
+        )
     }
 }
