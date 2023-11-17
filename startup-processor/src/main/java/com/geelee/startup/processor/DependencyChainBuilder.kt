@@ -38,7 +38,7 @@ class DependencyChainBuilder(
         val result = mutableListOf<DependencyChain>()
         components.forEach {
             val dependencyChain = DependencyChain(linkedSetOf())
-            buildDependencyChain(
+            dfsBuildDirectedAcyclicGraph(
                 it,
                 null,
                 building = building,
@@ -60,14 +60,14 @@ class DependencyChainBuilder(
     }
 
     /**
-     * 构建依赖链
+     * dfs 构建依赖链（有向无环图）
      * @param component 当前 Component 节点
      * @param subComponent 当前 Component 节点的依赖节点
      * @param building 全局记录正在构建依赖链的 Component 列表
      * @param built 全局记录已经确定链位置的 Component 列表
      * @param dependencyChain 记录本次确定链位置的 Component 列表, 是本次依赖链产物
      */
-    private fun buildDependencyChain(
+    private fun dfsBuildDirectedAcyclicGraph(
         component: ComponentInfo,
         subComponent: ComponentInfo?,
         building: MutableSet<ComponentInfo>,
@@ -191,7 +191,7 @@ class DependencyChainBuilder(
             if (dependencyComponentInfo == null || built.contains { it.name == clazzName }) {
                 continue
             }
-            buildDependencyChain(
+            dfsBuildDirectedAcyclicGraph(
                 dependencyComponentInfo,
                 componentInfo,
                 building,
