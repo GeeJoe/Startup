@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
 /**
  * Created by zhiyueli on 2021/5/29.
  *
- * 用于标注一个 Initializer, Startup 库会自动将此 Initializer 注册到 AppInitializer 中
+ * 用于标注一个 Initializer, Startup 库会自动将此 Initializer 注册到 [IInitializerRegistry] 中
  *
  * @param dependencies 依赖列表
  * @param threadMode 在指定线程下初始化
@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-annotation class AppInitializer(
+annotation class Initializer(
     val dependencies: Array<KClass<*>> = [],
     val threadMode: ComponentInfo.ThreadMode = ComponentInfo.ThreadMode.MainThread,
     val supportProcess: Array<String> = []

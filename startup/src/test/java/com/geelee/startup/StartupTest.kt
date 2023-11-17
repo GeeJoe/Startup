@@ -62,19 +62,19 @@ class StartupTest {
     var dInitialized = false
 
     inner class InitializerC : Initializer {
-        override fun create(context: Context, processName: String) {
+        override fun init(context: Context, processName: String) {
             cInitialized = true
         }
     }
 
     inner class InitializerD : Initializer {
-        override fun create(context: Context, processName: String) {
+        override fun init(context: Context, processName: String) {
             dInitialized = true
         }
     }
 
     inner class InitializerWithException : Initializer {
-        override fun create(context: Context, processName: String) {
+        override fun init(context: Context, processName: String) {
             throw MockException("mock exception")
         }
     }

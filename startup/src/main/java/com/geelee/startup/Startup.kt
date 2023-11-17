@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
  *
  * 使用方式
  * Step 1: 实现 [com.geelee.startup.Initializer] 接口，在实现类中添加自己组件的初始化逻辑
- * Step 2: 实现类加上注解 [com.geelee.startup.annotation.AppInitializer]
+ * Step 2: 实现类加上注解 [com.geelee.startup.annotation.Initializer]
  */
 class Startup private constructor(
     private val appContext: Context,
@@ -94,7 +94,7 @@ class Startup private constructor(
         try {
             val initializer = this.instance as Initializer
             logger.i(String.format("Initializing %s at %s", this.name, Thread.currentThread()))
-            initializer.create(appContext, currentProcess)
+            initializer.init(appContext, currentProcess)
             logger.i(String.format("Initialized %s at %s", this.name, Thread.currentThread()))
         } catch (e: Throwable) {
             if (logger.isDebugVersion()) {

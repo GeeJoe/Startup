@@ -1,15 +1,15 @@
 package com.geelee.startup.demo
 
-import com.geelee.startup.annotation.AppInitializer
+import com.geelee.startup.annotation.Initializer
 
 /**
  * Created by zhiyueli on 11/13/23 17:52.
  */
-@AppInitializer(dependencies = [BInitializer::class])
+@Initializer(dependencies = [BInitializer::class])
 class AInitializer : BaseLogInitializer()
 
-@AppInitializer(dependencies = [CInitializer::class])
+@Initializer(dependencies = [CInitializer::class])
 class BInitializer : BaseLogInitializer()
 
-@AppInitializer
+@Initializer
 class CInitializer : BaseLogInitializer()

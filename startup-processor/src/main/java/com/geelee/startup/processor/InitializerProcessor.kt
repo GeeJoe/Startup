@@ -1,6 +1,6 @@
 package com.geelee.startup.processor
 
-import com.geelee.startup.annotation.AppInitializer
+import com.geelee.startup.annotation.Initializer
 import com.geelee.startup.annotation.IInitializerRegistry
 import com.geelee.startup.annotation.model.ComponentInfo
 import com.geelee.startup.annotation.model.DependencyChain
@@ -51,7 +51,7 @@ class InitializerProcessor : AbstractProcessor() {
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
         return mutableSetOf(
-            AppInitializer::class.java.canonicalName
+            Initializer::class.java.canonicalName
         )
     }
 
@@ -89,15 +89,15 @@ class InitializerProcessor : AbstractProcessor() {
     }
 
     private fun buildComponentInfoList(roundEnvironment: RoundEnvironment): List<ComponentInfo> {
-        return roundEnvironment.getElementsAnnotatedWith(AppInitializer::class.java)
+        return roundEnvironment.getElementsAnnotatedWith(Initializer::class.java)
             .filter {
                 if (it !is TypeElement) {
-                    throw IllegalAnnotationException("${AppInitializer::class.java.simpleName} 只能注解到实现了 Initializer 接口的类上 --> ${it.simpleName}")
+                    throw IllegalAnnotationException("${Initializer::class.java.simpleName} 只能注解到实现了 Initializer 接口的类上 --> ${it.simpleName}")
                 }
                 true
             }
             .map {
-                val annotation = it.getAnnotation(AppInitializer::class.java)
+                val annotation = it.getAnnotation(Initializer::class.java)
                 val componentName = (it as TypeElement).qualifiedName.toString()
                 val supportProcess = annotation.supportProcess
                 val threadMode = annotation.threadMode
@@ -112,7 +112,7 @@ class InitializerProcessor : AbstractProcessor() {
             }
     }
 
-    private fun AppInitializer.getClazzArrayNameList(): List<String> {
+    private fun Initializer.getClazzArrayNameList(): List<String> {
         try {
             return this.dependencies.map { it.java.canonicalName }
         } catch (mte: MirroredTypesException) {
