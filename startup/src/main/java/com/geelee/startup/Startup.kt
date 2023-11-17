@@ -3,6 +3,8 @@ package com.geelee.startup
 import android.content.Context
 import android.util.Log
 import com.geelee.startup.annotation.IInitializerRegistry
+import com.geelee.startup.annotation.IInitializerRegistry.Companion.GENERATED_CLASS_NAME
+import com.geelee.startup.annotation.IInitializerRegistry.Companion.GENERATED_CLASS_PACKAGE_NAME
 import com.geelee.startup.annotation.model.ComponentInfo
 import com.geelee.startup.annotation.model.DependencyChain
 import com.geelee.startup.ktx.isSupportProcess
@@ -109,16 +111,22 @@ class Startup private constructor(
         @JvmStatic
         fun build(
             context: Context,
-            registry: IInitializerRegistry,
+            registry: IInitializerRegistry = Class.forName("${GENERATED_CLASS_PACKAGE_NAME}.${GENERATED_CLASS_NAME}")
+                .newInstance() as IInitializerRegistry,
             logger: IStartupLogger = DefaultLogger()
         ): Startup {
             val appContext = context.applicationContext ?: context
             return Startup(appContext, registry, logger)
         }
+
+        @JvmStatic
+        fun init(context: Context) {
+            build(context).init()
+        }
     }
 }
 
-private class DefaultLogger: IStartupLogger {
+private class DefaultLogger : IStartupLogger {
     override fun i(msg: String) {
         Log.i("Startup-Default-Logger", msg)
     }
