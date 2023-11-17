@@ -1,15 +1,20 @@
 package com.geelee.startup.demo
 
-import com.geelee.startup.annotation.Initializer
+import com.geelee.startup.annotation.Config
+import com.geelee.startup.annotation.model.ComponentInfo
 
 /**
  * Created by zhiyueli on 11/13/23 17:52.
  */
-@Initializer(dependencies = [BInitializer::class])
+@Config(
+    dependencies = [BInitializer::class],
+    threadMode = ComponentInfo.ThreadMode.WorkThread,
+    supportProcess = ["sub"]
+)
 class AInitializer : BaseLogInitializer()
 
-@Initializer(dependencies = [CInitializer::class])
+@Config(dependencies = [CInitializer::class])
 class BInitializer : BaseLogInitializer()
 
-@Initializer
+@Config
 class CInitializer : BaseLogInitializer()

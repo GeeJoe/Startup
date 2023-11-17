@@ -6,6 +6,7 @@ import com.geelee.startup.annotation.model.ComponentInfo
 import com.geelee.startup.annotation.model.DependencyChain
 import com.geelee.startup.processor.exception.CycleDependencyException
 import com.geelee.startup.processor.exception.IllegalProcessException
+import com.geelee.startup.processor.exception.IllegalThreadException
 import com.geelee.startup.processor.ktx.contains
 import com.geelee.startup.processor.ktx.toSimpleString
 import java.util.concurrent.CopyOnWriteArraySet
@@ -164,7 +165,7 @@ class DependencyChainBuilder(
                 subComponent,
                 component
             )
-            throw IllegalThreadStateException(message)
+            throw IllegalThreadException(message)
         }
     }
 

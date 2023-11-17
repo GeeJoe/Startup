@@ -26,7 +26,7 @@ import kotlinx.coroutines.withContext
  *
  * 使用方式
  * Step 1: 实现 [com.geelee.startup.Initializer] 接口，在实现类中添加自己组件的初始化逻辑
- * Step 2: 实现类加上注解 [com.geelee.startup.annotation.Initializer]
+ * Step 2: 实现类加上注解 [com.geelee.startup.annotation.Config]
  */
 class Startup private constructor(
     private val appContext: Context,
