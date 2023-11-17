@@ -1,6 +1,7 @@
 package com.geelee.startup
 
 import android.content.Context
+import android.util.Log
 import com.geelee.startup.annotation.IInitializerRegistry
 import com.geelee.startup.annotation.model.ComponentInfo
 import com.geelee.startup.annotation.model.DependencyChain
@@ -109,10 +110,25 @@ class Startup private constructor(
         fun build(
             context: Context,
             registry: IInitializerRegistry,
-            logger: IStartupLogger
+            logger: IStartupLogger = DefaultLogger()
         ): Startup {
             val appContext = context.applicationContext ?: context
             return Startup(appContext, registry, logger)
         }
     }
+}
+
+private class DefaultLogger: IStartupLogger {
+    override fun i(msg: String) {
+        Log.i("Startup-Default-Logger", msg)
+    }
+
+    override fun e(msg: String, throwable: Throwable) {
+        Log.e("Startup-Default-Logger", msg, throwable)
+    }
+
+    override fun isDebugVersion(): Boolean {
+        return BuildConfig.DEBUG
+    }
+
 }
