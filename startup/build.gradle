@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
 }
 
 android {
@@ -36,4 +37,40 @@ dependencies {
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+ext["ossrhUsername"] = ''
+ext["ossrhPassword"] = ''
+
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    println "Found secret props file, loading props"
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        ext[name] = value
+    }
+} else {
+    println "No props file, loading env vars"
+}
+
+publishing {
+    repositories {
+        maven {
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+            url 'https://s01.oss.sonatype.org/content/repositories/releases/'
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            groupId 'io.github.geejoe'
+            artifactId 'startup'
+            version '0.0.4'
+        }
+    }
 }

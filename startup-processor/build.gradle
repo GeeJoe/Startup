@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
     id 'org.jetbrains.kotlin.jvm'
     id 'kotlin-kapt'
+    id 'maven-publish'
 }
 
 java {
@@ -14,4 +15,40 @@ dependencies {
     implementation "com.squareup:kotlinpoet:1.7.2"
     implementation "com.google.auto.service:auto-service:1.0"
     kapt "com.google.auto.service:auto-service:1.0"
+}
+
+ext["ossrhUsername"] = ''
+ext["ossrhPassword"] = ''
+
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    println "Found secret props file, loading props"
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        ext[name] = value
+    }
+} else {
+    println "No props file, loading env vars"
+}
+
+publishing {
+    repositories {
+        maven {
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+            url 'https://s01.oss.sonatype.org/content/repositories/releases/'
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            artifact("$buildDir/libs/${project.getName()}.jar")
+            groupId 'io.github.geejoe'
+            artifactId 'startup-processor'
+            version '0.0.4'
+        }
+    }
 }

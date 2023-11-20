@@ -40,8 +40,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    implementation project(":startup")
-    kapt project(":startup-processor")
+    implementation "io.github.geejoe:startup:0.0.4"
+    implementation "io.github.geejoe:startup-annotation:0.0.4"
+    kapt "io.github.geejoe:startup-processor:0.0.4"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
