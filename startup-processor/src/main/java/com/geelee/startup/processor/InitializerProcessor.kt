@@ -102,13 +102,12 @@ class InitializerProcessor : AbstractProcessor() {
                 val supportProcess = annotation.supportProcess
                 val threadMode = annotation.threadMode
                 val dependencies = annotation.getClazzArrayNameList()
-                val componentInfo = ComponentInfo(
+                ComponentInfo(
                     name = componentName,
                     supportProcess = supportProcess.toList(),
                     threadMode = threadMode,
                     dependencies = dependencies.toList()
                 ) { }
-                componentInfo
             }
     }
 

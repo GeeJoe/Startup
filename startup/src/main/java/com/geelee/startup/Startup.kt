@@ -37,8 +37,8 @@ class Startup private constructor(
     private val currentProcess = appContext.processName()
 
     fun init() {
-        initInMainThread(currentProcess)
         MainScope().launch {
+            initInMainThread(currentProcess)
             initInWorkThreadAsync(currentProcess)
         }
     }
