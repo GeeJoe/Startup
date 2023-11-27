@@ -8,8 +8,7 @@ import com.geelee.startup.annotation.model.ComponentInfo
  */
 @Config(
     dependencies = [BInitializer::class],
-    threadMode = ComponentInfo.ThreadMode.WorkThread,
-    supportProcess = ["sub"]
+    threadMode = ComponentInfo.ThreadMode.WorkThread
 )
 class AInitializer : BaseLogInitializer()
 

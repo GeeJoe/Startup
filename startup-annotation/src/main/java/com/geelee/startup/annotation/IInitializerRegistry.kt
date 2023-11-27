@@ -27,7 +27,5 @@ interface IInitializerRegistry {
         return getAllInitializer()[name]
     }
 
-    fun getMainThreadComponentChainList(): List<DependencyChain>
-
-    fun getWorkThreadComponentChainList(): List<DependencyChain>
+    fun getComponentChainList(): List<DependencyChain>
 }

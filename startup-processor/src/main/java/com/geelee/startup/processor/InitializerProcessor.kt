@@ -31,8 +31,6 @@ class InitializerProcessor : AbstractProcessor() {
             IInitializerRegistry.GENERATED_CLASS_PACKAGE_NAME
 
         private const val ALL_LIST = "allList"
-        private const val MAIN_THREAD_LIST = "mainThreadList"
-        private const val WORK_THREAD_LIST = "workThreadList"
     }
 
     private lateinit var messager: Messager
@@ -127,10 +125,7 @@ class InitializerProcessor : AbstractProcessor() {
 
         val componentList = buildComponentInfoList(roundEnvironment).sorted()
         val dependencyChainBuilder = DependencyChainBuilder(logger, componentList.toMap())
-        val mainThreadComponentChainList =
-            dependencyChainBuilder.buildComponentChainList(componentList.getMainThreadComponentList())
-        val workThreadComponentChainList =
-            dependencyChainBuilder.buildComponentChainList(componentList.getWorkThreadComponentList())
+        val componentChainList = dependencyChainBuilder.buildComponentChainList(componentList)
 
         FileSpec.builder(
             GENERATE_CLASS_PACKAGE_NAME,
@@ -153,28 +148,6 @@ class InitializerProcessor : AbstractProcessor() {
                             .initializer(CodeBlock.of(componentList.toMapLiteral()))
                             .build()
                     )
-                    .addProperty(
-                        PropertySpec.builder(
-                            MAIN_THREAD_LIST,
-                            List::class.asClassName().parameterizedBy(
-                                DependencyChain::class.asTypeName()
-                            )
-                        )
-                            .addModifiers(KModifier.PRIVATE)
-                            .initializer(CodeBlock.of(mainThreadComponentChainList.toListLiteral()))
-                            .build()
-                    )
-                    .addProperty(
-                        PropertySpec.builder(
-                            WORK_THREAD_LIST,
-                            List::class.asClassName().parameterizedBy(
-                                DependencyChain::class.asTypeName()
-                            )
-                        )
-                            .addModifiers(KModifier.PRIVATE)
-                            .initializer(CodeBlock.of(workThreadComponentChainList.toListLiteral()))
-                            .build()
-                    )
                     .addFunction(
                         FunSpec.builder("getAllInitializer")
                             .returns(
@@ -188,25 +161,14 @@ class InitializerProcessor : AbstractProcessor() {
                             .build()
                     )
                     .addFunction(
-                        FunSpec.builder("getMainThreadComponentChainList")
+                        FunSpec.builder("getComponentChainList")
                             .returns(
                                 List::class.asClassName().parameterizedBy(
                                     DependencyChain::class.asTypeName()
                                 )
                             )
                             .addModifiers(KModifier.OVERRIDE)
-                            .addStatement("return $MAIN_THREAD_LIST")
-                            .build()
-                    )
-                    .addFunction(
-                        FunSpec.builder("getWorkThreadComponentChainList")
-                            .returns(
-                                List::class.asClassName().parameterizedBy(
-                                    DependencyChain::class.asTypeName()
-                                )
-                            )
-                            .addModifiers(KModifier.OVERRIDE)
-                            .addStatement("return $WORK_THREAD_LIST")
+                            .addStatement("return ${componentChainList.toListLiteral()}")
                             .build()
                     )
                     .build()
@@ -214,25 +176,8 @@ class InitializerProcessor : AbstractProcessor() {
             .build()
             .writeTo(File(kaptKotlinGeneratedDir))
         // 输出报告
-        InitializerReporter(
-            mainThreadComponentChainList,
-            workThreadComponentChainList
-        ).outputReport(processingEnv)
+        InitializerReporter(componentChainList).outputReport(processingEnv)
         return true
-    }
-
-    /**
-     * 获取所有在主线程执行的初始化器
-     */
-    private fun List<ComponentInfo>.getMainThreadComponentList(): List<ComponentInfo> {
-        return this.filter { it.threadMode == ComponentInfo.ThreadMode.MainThread }
-    }
-
-    /**
-     * 获取所有在子线程执行的初始化器
-     */
-    private fun List<ComponentInfo>.getWorkThreadComponentList(): List<ComponentInfo> {
-        return this.filter { it.threadMode == ComponentInfo.ThreadMode.WorkThread }
     }
 
     /**

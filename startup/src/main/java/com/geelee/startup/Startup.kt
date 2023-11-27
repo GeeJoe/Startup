@@ -49,9 +49,6 @@ class Startup private constructor(
     private suspend fun initInWorkThreadAsync(currentProcess: String) =
         withContext(Dispatchers.Default) {
             val taskInParallel = mutableListOf<Deferred<Unit>>()
-            registry.getWorkThreadComponentChainList().forEach {
-                taskInParallel.add(async { it.initOneByOneAsync(currentProcess) })
-            }
             taskInParallel.forEach { it.await() }
         }
 
@@ -59,9 +56,6 @@ class Startup private constructor(
      * 主线程的依赖链之间串行执行
      */
     fun initInMainThread(currentProcess: String) {
-        registry.getMainThreadComponentChainList().forEach {
-            it.initOneByOne(currentProcess)
-        }
     }
 
     /**
